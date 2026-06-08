@@ -18,9 +18,9 @@
   </properties>
 
   <modules>
-    <module>samltest-backend</module>
+    <module>samltesttool-backend</module>
     <!-- module>samltest-distro</module -->
-    <module>samltest-frontend</module>
+    <module>samltesttool-frontend</module>
   </modules>
   
   <build>
