@@ -38,9 +38,9 @@ public class SamlTestServer extends Application<SamlTestConfig> {
 
     @Override
     public void run(SamlTestConfig config, Environment env) throws Exception {
-        String jdbcUrl   = config.getDatabase().url;
-        String adminUser = config.getDatabase().adminUser;
-        String adminPwd  = config.getDatabase().adminPwd;
+        String jdbcUrl   = config.getDatabase().getUrl();
+        String adminUser = config.getDatabase().getAdminUser();
+        String adminPwd  = config.getDatabase().getAdminPwd();
 
         // Optionally set driver class if you like (BasicDataSource can usually infer from URL)
         if (jdbcUrl != null && jdbcUrl.startsWith("jdbc:postgresql:")) {

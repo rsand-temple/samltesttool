@@ -9,21 +9,21 @@ import lombok.Getter;
 public class SamlTestConfig extends Configuration {
     @Getter
     public static class Database {
-        String url;
-        String adminUser;
-        String adminPwd;
+    	private String url;
+    	private String adminUser;
+    	private String adminPwd;
     }
 
     @Getter
     public static class Tenant {
-        String tenantUrl;
-        String apiKey;
-        String apiSecret;
+    	private String tenantUrl;
+    	private String apiKey;
+    	private String apiSecret;
     }
 
     @JsonProperty
-    Database database;
+    private Database database;
 
     @JsonProperty
-    Tenant tenant;
+    private Tenant tenant;
 }

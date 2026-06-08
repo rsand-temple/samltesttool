@@ -20,12 +20,15 @@ import java.util.stream.Collectors;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class BatchRunner {
+	static Logger logger = LoggerFactory.getLogger(BatchRunner.class);
 
     private static final int BATCH_SIZE = 50;
 
@@ -62,13 +65,14 @@ public class BatchRunner {
         }
 
         List<String> txids = records.stream()
-                .map(r -> r.get("txid"))
+                .map(r -> r.get("transaction_id"))
                 .filter(Objects::nonNull)
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
                 .distinct()
                 .collect(Collectors.toList());
 
+        logger.info("Checking txids {}", txids);
         Map<String, JsonNode> resultsByTxid = new LinkedHashMap<>();
 
         for (int i = 0; i < txids.size(); i += BATCH_SIZE) {
@@ -101,24 +105,24 @@ public class BatchRunner {
                 resultsByTxid.put(txid, result);
             }
 
-            System.out.printf("Processed %d / %d%n", Math.min(i + BATCH_SIZE, txids.size()), txids.size());
+            logger.info("Processed {} / {}", Math.min(i + BATCH_SIZE, txids.size()), txids.size());
         }
 
         try (
                 Writer writer = Files.newBufferedWriter(outputCsv, StandardCharsets.UTF_8);
                 @SuppressWarnings("deprecation")
                 CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT.builder()
-                        .setHeader("time", "txid", "localSpid", "remoteIssuer", "aicLogResponse")
+                        .setHeader("timestamp", "transaction_id", "localSpid", "remoteIssuer", "aicLogResponse")
                         .build())) {
             for (CSVRecord r : records) {
-                String   txid      = r.get("txid").trim();
+                String   txid      = r.get("transaction_id").trim();
                 JsonNode logResult = resultsByTxid.get(txid);
 
                 printer.printRecord(
-                        r.get("time"),
+                        r.get("timestamp"),
                         txid,
-                        r.get("localSpid"),
-                        r.get("remoteIssuer"),
+                        r.get("host_in_input"),
+                        r.get("issuer"),
                         logResult == null ? "" : mapper.writeValueAsString(logResult));
             }
         }
