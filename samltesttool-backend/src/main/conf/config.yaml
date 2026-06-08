@@ -34,7 +34,7 @@ database:
   url: jdbc:h2:C:/dev/temp/samltooldb;MODE=PostgreSQL;AUTO_SERVER=TRUE
   
 tenant:
-   tenantUrl: "${TENANT_URL}"
-   apiKey: "${AIC_LOG_API_KEY}"
-   apiSecret: "${AIC_LOG_API_SECRET}"
+  tenantUrl: "${TENANT_URL}"
+  apiKey: "${AIC_LOG_API_KEY}"
+  apiSecret: "${AIC_LOG_API_SECRET}"
    
